@@ -88,7 +88,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="Roll No"
-        android:inputType="text" />
+        android:inputType="number" />
 
     <EditText
         android:id="@+id/mobile_edt_txt"
@@ -96,7 +96,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="Mobile No"
-        android:inputType="text" />
+        android:inputType="number" />
 
     <EditText
         android:id="@+id/aadhar_edt_txt"
@@ -104,7 +104,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="Aadhar No"
-        android:inputType="text" />
+        android:inputType="number" />
 
     <EditText
         android:id="@+id/amount_edt_txt"
@@ -112,7 +112,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="Amount"
-        android:inputType="text" />
+        android:inputType="number" />
 
     <Button
         android:id="@+id/save_btn"
@@ -202,7 +202,8 @@
 
         <RadioGroup
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:id="@+id/payment_group_radio">
 
             <RadioButton
                 android:id="@+id/online_radio_btn"

@@ -18,13 +18,14 @@ import java.util.ArrayList;
 public class ListFrag extends Fragment {
 
     private static ListRecyclerAdapter adapter;
-    RecyclerView recyclerView;
+    private  static RecyclerView recyclerView;
     View view;
     FloatingActionButton addBtn;
 
     public static ListRecyclerAdapter getAdapter(){
         return adapter;
     }
+    public static RecyclerView getRecyclerView(){ return recyclerView; }
     public ListFrag() {
         // Required empty public constructor
 
