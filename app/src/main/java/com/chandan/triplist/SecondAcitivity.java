@@ -1,13 +1,16 @@
 package com.chandan.triplist;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.ActionMenuItem;
 import androidx.appcompat.widget.Toolbar;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -25,7 +28,7 @@ public class SecondAcitivity extends AppCompatActivity {
     private Button saveBtn;
     private int index;
     private RadioGroup genderGroup,paymentGroup;
-    private String paymentMode=null,gender=null;
+    private String paymentMode="due",gender="male";
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -50,6 +53,7 @@ public class SecondAcitivity extends AppCompatActivity {
             gender = DataBase.getData().get(index).getGender();
             paymentMode = DataBase.getData().get(index).getPaymentMode();
 
+            rollEdt.setInputType(InputType.TYPE_NULL);
 
             if(DataBase.getData().get(index).getGender().equalsIgnoreCase("MALE")){
                 genderGroup.check(R.id.male_radio_btn);
@@ -96,33 +100,72 @@ public class SecondAcitivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(forUpdate.getFlags()==0){
+                    // code for add new student
 
                     String name,roll,mobile,aadhar,amount;
 
-                    name = nameEdt.getText().toString();
-                    roll = rollEdt.getText().toString();
-                    mobile = mobileEdt.getText().toString();
-                    aadhar = aadharEdt.getText().toString();
-                    amount = amountEdt.getText().toString();
+                    if(!nameEdt.getText().toString().isEmpty()){
+                        name = nameEdt.getText().toString();
+                    }else{
+                        name = "XXXXXXXXXXXXXXX";
+                    }
+                    if(!mobileEdt.getText().toString().isEmpty()){
+                        mobile = mobileEdt.getText().toString();
+                    }else{
+                       mobile = "XXXXXXXXXX";
+                    }
+                    if(!aadharEdt.getText().toString().isEmpty()){
+                        aadhar = aadharEdt.getText().toString();
+                    }else{
+                        aadhar = "XXXXXXXXXXXXXXXX";
+                    }
+                    if(!amountEdt.getText().toString().isEmpty()){
+                        amount = amountEdt.getText().toString();
+                    }else{
+                        amount = "XXXX";
+                    }
 
-                    DataBase.getData().add(new DataModel(name,roll,mobile,aadhar,amount,paymentMode,gender));
-                    ListFrag.getAdapter().notifyItemInserted(index);
-                    ListFrag.getRecyclerView().scrollToPosition(index);
-                    finish();
+                    if(!rollEdt.getText().toString().isEmpty()){
+                        roll = rollEdt.getText().toString();
+                    }{
+                        roll = null;
+                    }
+
+                        DataBase.getData().add(0, new DataModel(name, roll, mobile, aadhar, amount, paymentMode, gender));
+                        ListFrag.getAdapter().notifyDataSetChanged();
+                        ListFrag.getRecyclerView().scrollToPosition(0);
+                        finish();
 
                 }else if(forUpdate.getFlags()==1){
 
                         // code here for update
                     String name,roll,mobile,aadhar,amount;
 
-                    name = nameEdt.getText().toString();
-                    roll = rollEdt.getText().toString();
-                    mobile = mobileEdt.getText().toString();
-                    aadhar = aadharEdt.getText().toString();
-                    amount = amountEdt.getText().toString();
+                    if(!nameEdt.getText().toString().isEmpty()){
+                        name = nameEdt.getText().toString();
+                    }else{
+                        name = "XXXXXXXXXXXXXXX";
+                    }
+                    if(!mobileEdt.getText().toString().isEmpty()){
+                        mobile = mobileEdt.getText().toString();
+                    }else{
+                        mobile = "XXXXXXXXXX";
+                    }
+                    if(!aadharEdt.getText().toString().isEmpty()){
+                        aadhar = aadharEdt.getText().toString();
+                    }else{
+                        aadhar = "XXXXXXXXXXXXXXXX";
+                    }
+                    if(!amountEdt.getText().toString().isEmpty()){
+                        amount = amountEdt.getText().toString();
+                    }else{
+                        amount = "XXXX";
+                    }
 
+                    roll = rollEdt.getText().toString();
                     DataBase.getData().set(index,new DataModel(name,roll,mobile,aadhar,amount,paymentMode,gender));
                     ListFrag.getAdapter().notifyDataSetChanged();
+                    ListFrag.getRecyclerView().scrollToPosition(index);
                     finish();
                 }
             }
