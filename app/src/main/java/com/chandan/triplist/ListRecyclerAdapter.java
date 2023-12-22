@@ -24,7 +24,6 @@ import java.util.ArrayList;
 
 public class ListRecyclerAdapter extends RecyclerView.Adapter<ListRecyclerAdapter.ViewHolder> {
 
-    private ArrayList<DataModel> data;
     private Context context;
     private int lastPosition=-1;
     @NonNull
@@ -34,22 +33,20 @@ public class ListRecyclerAdapter extends RecyclerView.Adapter<ListRecyclerAdapte
         return viewHolder;
     }
 
-    public ListRecyclerAdapter(Context context, ArrayList<DataModel> data) {
-        this.data = data;
+    public ListRecyclerAdapter(Context context) {
         this.context = context;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        holder.setProfile(data.get(holder.getPosition()).getProfile());
-        holder.setName(data.get(holder.getPosition()).getName());
-        holder.setRoll(data.get(holder.getAdapterPosition()).getRoll());
-        holder.setMobile(data.get(holder.getPosition()).getMobile());
-        holder.setAadhar(data.get(holder.getPosition()).getAadhar());
-        Log.e("amount",data.get(holder.getAdapterPosition()).getAmount());
-        holder.setAmount(data.get(holder.getPosition()).getAmount());
-        holder.setRootCardColor(data.get(holder.getPosition()).getPaymentColor());
+        holder.setProfile(DataBase.getData().get(holder.getPosition()).getProfile());
+        holder.setName(DataBase.getData().get(holder.getPosition()).getName());
+        holder.setRoll(DataBase.getData().get(holder.getAdapterPosition()).getRoll());
+        holder.setMobile(DataBase.getData().get(holder.getPosition()).getMobile());
+        holder.setAadhar(DataBase.getData().get(holder.getPosition()).getAadhar());
+        holder.setAmount(DataBase.getData().get(holder.getPosition()).getAmount());
+        holder.setRootCardColor(DataBase.getData().get(holder.getPosition()).getPaymentColor());
         setAnimation(holder.itemView,holder.getAdapterPosition());
 
         // start code for delete
@@ -63,7 +60,7 @@ public class ListRecyclerAdapter extends RecyclerView.Adapter<ListRecyclerAdapte
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                data.remove(holder.getAdapterPosition());
+                                DataBase.getData().remove(holder.getAdapterPosition());
                                 notifyDataSetChanged();
                             }
                         })
@@ -87,13 +84,6 @@ public class ListRecyclerAdapter extends RecyclerView.Adapter<ListRecyclerAdapte
             public void onClick(View view) {
                 Intent updateActivity = new Intent(context,SecondAcitivity.class);
                 updateActivity.addFlags(1);
-                updateActivity.putExtra("name",data.get(holder.getAdapterPosition()).getName());
-                updateActivity.putExtra("roll",data.get(holder.getAdapterPosition()).getRoll());
-                updateActivity.putExtra("mobile",data.get(holder.getAdapterPosition()).getMobile());
-                updateActivity.putExtra("aadhar",data.get(holder.getAdapterPosition()).getAadhar());
-                updateActivity.putExtra("amount",data.get(holder.getAdapterPosition()).getAmount());
-                updateActivity.putExtra("gender",data.get(holder.getAdapterPosition()).getGender());
-                updateActivity.putExtra("payment_mode",data.get(holder.getAdapterPosition()).getPaymentMode());
                 updateActivity.putExtra("position",holder.getAdapterPosition());
                 context.startActivity(updateActivity);
             }
@@ -102,16 +92,7 @@ public class ListRecyclerAdapter extends RecyclerView.Adapter<ListRecyclerAdapte
 
     @Override
     public int getItemCount() {
-        return data.size();
-    }
-
-
-    public void setData(ArrayList<DataModel> data) {
-        this.data = data;
-    }
-
-    public void setContext(Context context) {
-        this.context = context;
+        return DataBase.getData().size();
     }
 
 

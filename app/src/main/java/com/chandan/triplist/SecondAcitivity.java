@@ -23,6 +23,7 @@ public class SecondAcitivity extends AppCompatActivity {
     private EditText nameEdt,rollEdt,mobileEdt,aadharEdt,amountEdt;
     private RadioButton maleRadio,femaleRadio,onlineRadio,cashRadio,dueRadio;
     private Button saveBtn;
+    private int index;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -38,23 +39,23 @@ public class SecondAcitivity extends AppCompatActivity {
         forUpdate = getIntent();
         if(forUpdate.getFlags()== 1){
             getSupportActionBar().setTitle("Update Details");
+            index = forUpdate.getIntExtra("position",0);
+            nameEdt.setText(DataBase.getData().get(index).getName());
+            rollEdt.setText(DataBase.getData().get(index).getRoll());
+            mobileEdt.setText(DataBase.getData().get(index).getMobile());
+            aadharEdt.setText(DataBase.getData().get(index).getAadhar());
+            amountEdt.setText(DataBase.getData().get(index).getAmount());
 
-            nameEdt.setText(forUpdate.getStringExtra("name"));
-            rollEdt.setText(forUpdate.getStringExtra("roll"));
-            mobileEdt.setText(forUpdate.getStringExtra("mobile"));
-            aadharEdt.setText(forUpdate.getStringExtra("aadhar"));
-            amountEdt.setText(forUpdate.getStringExtra("amount"));
 
-
-            if(forUpdate.getStringExtra("gender").equalsIgnoreCase("MALE")){
+            if(DataBase.getData().get(index).getGender().equalsIgnoreCase("MALE")){
                 maleRadio.setChecked(true);
             }else{
                 femaleRadio.setChecked(true);
             }
 
-          if(forUpdate.getStringExtra("payment_mode").equalsIgnoreCase("ONLINE")){
-
-            }else if(forUpdate.getStringExtra("payment_mode").equalsIgnoreCase("CASH")){
+            if(DataBase.getData().get(index).getPaymentMode().equalsIgnoreCase("ONLINE")){
+                onlineRadio.setChecked(true);
+            }else if(DataBase.getData().get(index).getPaymentMode().equalsIgnoreCase("CASH")){
                 cashRadio.setChecked(true);
             }else{
                 dueRadio.setChecked(true);
