@@ -1,15 +1,13 @@
 package com.chandan.triplist;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.menu.ActionMenuItem;
 import androidx.appcompat.widget.Toolbar;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.text.InputType;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,9 +24,10 @@ public class SecondAcitivity extends AppCompatActivity {
     private EditText nameEdt,rollEdt,mobileEdt,aadharEdt,amountEdt;
     private RadioButton radioButton;
     private Button saveBtn;
-    private int index;
+    private int index,fragPosition;
     private RadioGroup genderGroup,paymentGroup;
     private String paymentMode="due",gender="male";
+
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -39,31 +38,31 @@ public class SecondAcitivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Add Student");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        // For update data will set here !!!
         forUpdate = getIntent();
+        fragPosition = forUpdate.getIntExtra("position",3);
+        // For update data will set here !!!
         if(forUpdate.getFlags()== 1){
             getSupportActionBar().setTitle("Update Details");
             index = forUpdate.getIntExtra("position",0);
-            nameEdt.setText(DataBase.getData().get(index).getName());
-            rollEdt.setText(DataBase.getData().get(index).getRoll());
-            mobileEdt.setText(DataBase.getData().get(index).getMobile());
-            aadharEdt.setText(DataBase.getData().get(index).getAadhar());
-            amountEdt.setText(DataBase.getData().get(index).getAmount());
-            gender = DataBase.getData().get(index).getGender();
-            paymentMode = DataBase.getData().get(index).getPaymentMode();
+            nameEdt.setText(DataBase.getAllData().get(index).getName());
+            rollEdt.setText(DataBase.getAllData().get(index).getRoll());
+            mobileEdt.setText(DataBase.getAllData().get(index).getMobile());
+            aadharEdt.setText(DataBase.getAllData().get(index).getAadhar());
+            amountEdt.setText(DataBase.getAllData().get(index).getAmount());
+            gender = DataBase.getAllData().get(index).getGender();
+            paymentMode = DataBase.getAllData().get(index).getPaymentMode();
 
             rollEdt.setInputType(InputType.TYPE_NULL);
 
-            if(DataBase.getData().get(index).getGender().equalsIgnoreCase("MALE")){
+            if(DataBase.getAllData().get(index).getGender().equalsIgnoreCase("MALE")){
                 genderGroup.check(R.id.male_radio_btn);
-            }else if (DataBase.getData().get(index).getGender().equalsIgnoreCase("FEMALE")){
+            }else if (DataBase.getAllData().get(index).getGender().equalsIgnoreCase("FEMALE")){
                 genderGroup.check(R.id.female_radio_btn);
             }
 
-            if(DataBase.getData().get(index).getPaymentMode().equalsIgnoreCase("ONLINE")){
+            if(DataBase.getAllData().get(index).getPaymentMode().equalsIgnoreCase("ONLINE")){
                 paymentGroup.check(R.id.online_radio_btn);
-            }else if(DataBase.getData().get(index).getPaymentMode().equalsIgnoreCase("CASH")){
+            }else if(DataBase.getAllData().get(index).getPaymentMode().equalsIgnoreCase("CASH")){
                 paymentGroup.check(R.id.cash_radio_btn);
             }else{
                 paymentGroup.check(R.id.due_radio_btn);
@@ -131,11 +130,21 @@ public class SecondAcitivity extends AppCompatActivity {
                         roll = null;
                     }
 
-                        DataBase.getData().add(0, new DataModel(name, roll, mobile, aadhar, amount, paymentMode, gender));
+
+                    DataBase.getAllData().add(0, new DataModel(name, roll, mobile, aadhar, amount, paymentMode, gender));
+                    if(ListFrag.getAdapter()!=null) {
                         ListFrag.getAdapter().notifyDataSetChanged();
                         ListFrag.getRecyclerView().scrollToPosition(0);
-                        finish();
-
+                    }
+                    if(BoysFrag.getAdapter()!=null) {
+                        BoysFrag.getAdapter().notifyDataSetChanged();
+                        BoysFrag.getRecyclerView().scrollToPosition(0);
+                    }
+                    if(GirlsFrag.getAdapter()!=null) {
+                        GirlsFrag.getAdapter().notifyDataSetChanged();
+                        GirlsFrag.getRecyclerView().scrollToPosition(0);
+                    }
+                    finish();
                 }else if(forUpdate.getFlags()==1){
 
                         // code here for update
@@ -163,9 +172,13 @@ public class SecondAcitivity extends AppCompatActivity {
                     }
 
                     roll = rollEdt.getText().toString();
-                    DataBase.getData().set(index,new DataModel(name,roll,mobile,aadhar,amount,paymentMode,gender));
-                    ListFrag.getAdapter().notifyDataSetChanged();
-                    ListFrag.getRecyclerView().scrollToPosition(index);
+                    DataBase.getAllData().set(index,new DataModel(name,roll,mobile,aadhar,amount,paymentMode,gender));
+                    if(ListFrag.getAdapter()!=null)
+                    ListFrag.getAdapter().notifyItemChanged(index);
+                    if(BoysFrag .getAdapter()!=null)
+                    BoysFrag.getAdapter().notifyItemChanged(index);
+                    if(GirlsFrag.getAdapter()!=null)
+                    GirlsFrag.getAdapter().notifyItemChanged(index);
                     finish();
                 }
             }

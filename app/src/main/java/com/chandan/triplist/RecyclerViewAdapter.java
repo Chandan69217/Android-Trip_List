@@ -1,13 +1,10 @@
 package com.chandan.triplist;
 
-import static androidx.core.content.ContextCompat.startActivity;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,12 +17,16 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
+public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
-public class ListRecyclerAdapter extends RecyclerView.Adapter<ListRecyclerAdapter.ViewHolder> {
-
-    private Context context;
+    private static Context context;
     private int lastPosition=-1;
+
+
+    public RecyclerViewAdapter(Context context) {
+        this.context = context;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -33,50 +34,13 @@ public class ListRecyclerAdapter extends RecyclerView.Adapter<ListRecyclerAdapte
         return viewHolder;
     }
 
-    public ListRecyclerAdapter(Context context) {
-        this.context = context;
-    }
+
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        holder.setProfile(DataBase.getData().get(holder.getPosition()).getProfile());
-        holder.setName(DataBase.getData().get(holder.getPosition()).getName());
-        holder.setRoll(DataBase.getData().get(holder.getAdapterPosition()).getRoll());
-        holder.setMobile(DataBase.getData().get(holder.getPosition()).getMobile());
-        holder.setAadhar(DataBase.getData().get(holder.getPosition()).getAadhar());
-        holder.setAmount(DataBase.getData().get(holder.getPosition()).getAmount());
-        holder.setRootCardColor(DataBase.getData().get(holder.getPosition()).getPaymentColor());
-        setAnimation(holder.itemView,holder.getAdapterPosition());
-
         // start code for delete
-        holder.getRootCardColor().setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                AlertDialog.Builder deleteDialog = new AlertDialog.Builder(context);
-                deleteDialog.setMessage("Do you want to delete")
-                        .setTitle("Delete")
-                        .setCancelable(true)
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                DataBase.getData().remove(holder.getAdapterPosition());
-                                notifyDataSetChanged();
-                            }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.cancel();
-                            }
-                        })
-                        .setIcon(R.drawable.delete)
-                        .show();
 
-
-                return true;
-            }
-        });
 
         // start code for update
         holder.getEditTxt().setOnClickListener(new View.OnClickListener() {
@@ -92,10 +56,8 @@ public class ListRecyclerAdapter extends RecyclerView.Adapter<ListRecyclerAdapte
 
     @Override
     public int getItemCount() {
-        return DataBase.getData().size();
+        return 0;
     }
-
-
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         private ImageView profile;
@@ -157,7 +119,7 @@ public class ListRecyclerAdapter extends RecyclerView.Adapter<ListRecyclerAdapte
         }
     }
 
-    private void setAnimation(View view,int position){
+    public void setAnimation(View view,int position){
         if(position>lastPosition) {
             Animation custom_animation = AnimationUtils.loadAnimation(context, R.anim.card_anim);
             view.setAnimation(custom_animation);

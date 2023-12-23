@@ -1,19 +1,18 @@
 package com.chandan.triplist;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.MenuItemCompat;
 import androidx.viewpager.widget.ViewPager;
 
-import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -27,12 +26,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         toolbar = findViewById(R.id.toolbar);
         viewPager = findViewById(R.id.view_pager);
         tabLayout = findViewById(R.id.tab_layout);
         setSupportActionBar(toolbar);
-
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
@@ -51,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String s) {
                int index = 0,flag = 0;
-                for(DataModel obj : DataBase.getData()){
+                for(DataModel obj : DataBase.getAllData()){
                     index++;
                     if(obj.getRoll().equalsIgnoreCase(s)){
                         flag = 1;
@@ -59,20 +56,32 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 if(flag == 1){
+                    if(tabLayout.getSelectedTabPosition()==0)
                     ListFrag.getRecyclerView().scrollToPosition(index - 1);
+                   // else if(tabLayout.getSelectedTabPosition()==1)
+                   // RecyclerViewAdapter.getRecyclerView(1).scrollToPosition(index - 1);
+                   // else if(tabLayout.getSelectedTabPosition()==2)
+                   //     RecyclerViewAdapter.getRecyclerView(2).scrollToPosition(index - 1);
                 }else {
-                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(getApplicationContext());
-
-                    alertDialog.setTitle("Search")
-                            .setMessage("Given roll No not found")
-                            .setIcon(R.drawable.baseline_add_alert_24)
-                            .setCancelable(false)
-                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    dialogInterface.cancel();
-                                }
-                            }).show();
+                //    Toast.makeText(MainActivity.this, "no record found", Toast.LENGTH_SHORT).show();
+//                    AlertDialog.Builder deleteDialog = new AlertDialog.Builder(getApplicationContext());
+//                    deleteDialog.setMessage("Do you want to delete")
+//                            .setTitle("Delete")
+//                            .setCancelable(true)
+//                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick(DialogInterface dialogInterface, int i) {
+//
+//                                }
+//                            })
+//                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick(DialogInterface dialogInterface, int i) {
+//                                    dialogInterface.cancel();
+//                                }
+//                            })
+//                            .setIcon(R.drawable.delete)
+//                            .show();
                 }
 
                 return false;
@@ -88,18 +97,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        SearchView searchView = (SearchView) item.getActionView();
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String s) {
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String s) {
-//                return false;
-//            }
-//        });
         return super.onOptionsItemSelected(item);
     }
 }

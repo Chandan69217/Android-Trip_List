@@ -13,23 +13,19 @@ import android.view.ViewGroup;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.ArrayList;
-
 public class ListFrag extends Fragment {
-
-    private static ListRecyclerAdapter adapter;
-    private  static RecyclerView recyclerView;
     View view;
-    FloatingActionButton addBtn;
+    private static ListRecyclerViewAdapter adapter;
+    private static RecyclerView recyclerView;
+    private FloatingActionButton addBtn;
 
-    public static ListRecyclerAdapter getAdapter(){
-        return adapter;
-    }
-    public static RecyclerView getRecyclerView(){ return recyclerView; }
     public ListFrag() {
         // Required empty public constructor
 
     }
+
+    public static RecyclerView getRecyclerView(){ return ListFrag.recyclerView;}
+    public static ListRecyclerViewAdapter getAdapter(){ return  ListFrag.adapter;}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -38,7 +34,7 @@ public class ListFrag extends Fragment {
 
         recyclerView = view.findViewById(R.id.list_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new ListRecyclerAdapter(getContext());
+        adapter = new ListRecyclerViewAdapter(getContext());
         recyclerView.setAdapter(adapter);
         addBtn = view.findViewById(R.id.floating_add_btn);
 
@@ -48,6 +44,7 @@ public class ListFrag extends Fragment {
             public void onClick(View view) {
                 Intent addAcitvity = new Intent(getActivity().getApplicationContext(),SecondAcitivity.class);
                 addAcitvity.addFlags(0);
+                addAcitvity.putExtra("position",0);
                 startActivity(addAcitvity);
             }
         });
