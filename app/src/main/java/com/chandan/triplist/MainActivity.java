@@ -10,11 +10,13 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.SearchView;
 import android.widget.Toast;
+import android.window.OnBackInvokedDispatcher;
 
 import com.google.android.material.tabs.TabLayout;
 
@@ -22,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private ViewPager viewPager;
     private TabLayout tabLayout;
+    private SearchView searchView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,48 +45,62 @@ public class MainActivity extends AppCompatActivity {
         inflater.inflate(R.menu.seearch,menu);
 
         MenuItem menuItem = menu.findItem(R.id.searchView);
-        SearchView searchView  = (SearchView) MenuItemCompat.getActionView(menuItem);
-
+        searchView  = (SearchView) MenuItemCompat.getActionView(menuItem);
+        searchView.setMaxWidth(Integer.MAX_VALUE);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
                int index = 0,flag = 0;
-                for(DataModel obj : DataBase.getAllData()){
-                    index++;
-                    if(obj.getRoll().equalsIgnoreCase(s)){
-                        flag = 1;
-                        break;
-                    }
-                }
-                if(flag == 1){
-                    if(tabLayout.getSelectedTabPosition()==0)
+               if(tabLayout.getSelectedTabPosition()==0) {
+                   for (DataModel obj : DataBase.getAllData()) {
+                       index++;
+                       if (obj.getRoll().equalsIgnoreCase(s)) {
+                           flag = 1;
+                           break;
+                       }
+                   }
+               }else if(tabLayout.getSelectedTabPosition()==1){
+                   for (DataModel obj : DataBase.getBoysData()) {
+                       index++;
+                       if (obj.getRoll().equalsIgnoreCase(s)) {
+                           flag = 1;
+                           break;
+                       }
+                   }
+               }else if(tabLayout.getSelectedTabPosition()==2){
+                   for (DataModel obj : DataBase.getGirlsData()) {
+                       index++;
+                       if (obj.getRoll().equalsIgnoreCase(s)) {
+                           flag = 1;
+                           break;
+                       }
+                   }
+               }
+                if(flag == 1 && tabLayout.getSelectedTabPosition()==0){
+                    if(ListFrag.getAdapter()!=null)
                     ListFrag.getRecyclerView().scrollToPosition(index - 1);
-                   // else if(tabLayout.getSelectedTabPosition()==1)
-                   // RecyclerViewAdapter.getRecyclerView(1).scrollToPosition(index - 1);
-                   // else if(tabLayout.getSelectedTabPosition()==2)
-                   //     RecyclerViewAdapter.getRecyclerView(2).scrollToPosition(index - 1);
+                    Toast toast = Toast.makeText(getApplicationContext(),"record found",Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.TOP,0,0);
+                    toast.show();
+                }else if(flag == 1 && tabLayout.getSelectedTabPosition()==1){
+                    if(BoysFrag.getAdapter()!=null)
+                        BoysFrag.getRecyclerView().scrollToPosition(index - 1);
+                        Toast toast = Toast.makeText(getApplicationContext(),"record found",Toast.LENGTH_LONG);
+                        toast.setGravity(Gravity.TOP,0,0);
+                        toast.show();
+                }else if(flag == 1 && tabLayout.getSelectedTabPosition()==2){
+                    if(GirlsFrag.getAdapter()!=null)
+                        GirlsFrag.getRecyclerView().scrollToPosition(index - 1);
+                    Toast toast = Toast.makeText(getApplicationContext(),"record found",Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.TOP,0,0);
+                    toast.show();
                 }else {
-                //    Toast.makeText(MainActivity.this, "no record found", Toast.LENGTH_SHORT).show();
-//                    AlertDialog.Builder deleteDialog = new AlertDialog.Builder(getApplicationContext());
-//                    deleteDialog.setMessage("Do you want to delete")
-//                            .setTitle("Delete")
-//                            .setCancelable(true)
-//                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-//                                @Override
-//                                public void onClick(DialogInterface dialogInterface, int i) {
-//
-//                                }
-//                            })
-//                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
-//                                @Override
-//                                public void onClick(DialogInterface dialogInterface, int i) {
-//                                    dialogInterface.cancel();
-//                                }
-//                            })
-//                            .setIcon(R.drawable.delete)
-//                            .show();
-                }
+                    Toast toast = Toast.makeText(getApplicationContext(),"No records found",Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.TOP,0,0);
+                    toast.show();
 
+            }
+                searchView.setIconified(true);
                 return false;
             }
 
@@ -98,5 +115,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(!searchView.isIconified()){
+            searchView.setIconified(true);
+        }else {
+            super.onBackPressed();
+        }
     }
 }
