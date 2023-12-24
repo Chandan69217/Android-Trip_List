@@ -39,9 +39,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        // start code for delete
-
-
         // start code for update
         holder.getEditTxt().setOnClickListener(new View.OnClickListener() {
             @Override

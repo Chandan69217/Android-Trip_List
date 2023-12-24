@@ -43,7 +43,9 @@ public class BoyRecyclerViewAdapter extends RecyclerViewAdapter{
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                DataBase.getAllData().remove(DataBase.getBoysData().get(holder.getAdapterPosition()));
+                                DataBase dataBase = new DataBase(context);
+                                dataBase.deleteRecord(DataBase.getAllData().get(holder.getAdapterPosition()).getRoll());
+                                DataBase.getAllData().addAll(dataBase.fetchData());
                                 notifyItemRemoved(holder.getAdapterPosition());
                                 if(ListFrag.getAdapter()!=null)
                                     ListFrag.getAdapter().notifyDataSetChanged();

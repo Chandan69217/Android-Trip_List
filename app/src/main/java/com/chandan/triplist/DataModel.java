@@ -22,12 +22,14 @@ private String Gender;
         this.Gender = gender;
     }
 
+    public DataModel(){}
     public int getProfile(){
-
     if(Gender.equalsIgnoreCase("MALE")){
         return R.drawable.boy;
-    }else{
+    }else if (Gender.equalsIgnoreCase("FEMALE")){
         return R.drawable.girl;
+    }else{
+        return R.drawable.man;
     }
 }
 

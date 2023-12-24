@@ -6,10 +6,12 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.MenuItemCompat;
 import androidx.viewpager.widget.ViewPager;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -48,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
         searchView  = (SearchView) MenuItemCompat.getActionView(menuItem);
         searchView.setMaxWidth(Integer.MAX_VALUE);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @SuppressLint("SuspiciousIndentation")
             @Override
             public boolean onQueryTextSubmit(String s) {
                int index = 0,flag = 0;

@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.InputType;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -24,9 +26,10 @@ public class SecondAcitivity extends AppCompatActivity {
     private EditText nameEdt,rollEdt,mobileEdt,aadharEdt,amountEdt;
     private RadioButton radioButton;
     private Button saveBtn;
-    private int index,fragPosition;
+    private int index;
     private RadioGroup genderGroup,paymentGroup;
-    private String paymentMode="due",gender="male";
+    private String paymentMode="DUE",gender="MALE";
+    private DataBase dataBase;
 
 
     @SuppressLint("MissingInflatedId")
@@ -35,11 +38,12 @@ public class SecondAcitivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second_acitivity);
         findID();
+        dataBase = new DataBase(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Add Student");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         forUpdate = getIntent();
-        fragPosition = forUpdate.getIntExtra("position",3);
+
         // For update data will set here !!!
         if(forUpdate.getFlags()== 1){
             getSupportActionBar().setTitle("Update Details");
@@ -96,6 +100,7 @@ public class SecondAcitivity extends AppCompatActivity {
             }
         });
         saveBtn.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("SuspiciousIndentation")
             @Override
             public void onClick(View view) {
                 if(forUpdate.getFlags()==0){
@@ -126,25 +131,31 @@ public class SecondAcitivity extends AppCompatActivity {
 
                     if(!rollEdt.getText().toString().isEmpty()){
                         roll = rollEdt.getText().toString();
-                    }{
+                    }else{
                         roll = null;
                     }
-
-
-                    DataBase.getAllData().add(0, new DataModel(name, roll, mobile, aadhar, amount, paymentMode, gender));
-                    if(ListFrag.getAdapter()!=null) {
-                        ListFrag.getAdapter().notifyDataSetChanged();
-                        ListFrag.getRecyclerView().scrollToPosition(0);
+                    if(roll!=null){
+                        Log.e("all","ok");
+                        dataBase.addRecord(name,roll,mobile,aadhar,amount,paymentMode,gender);
+                        DataBase.getAllData().addAll(dataBase.fetchData());
+                        if(ListFrag.getAdapter()!=null) {
+                            ListFrag.getAdapter().notifyDataSetChanged();
+                            ListFrag.getRecyclerView().scrollToPosition(DataBase.getAllData().size()-1);
+                        }
+                        if(BoysFrag.getAdapter()!=null) {
+                            BoysFrag.getAdapter().notifyDataSetChanged();
+                            BoysFrag.getRecyclerView().scrollToPosition(DataBase.getBoysData().size()-1);
+                        }
+                        if(GirlsFrag.getAdapter()!=null) {
+                            GirlsFrag.getAdapter().notifyDataSetChanged();
+                            GirlsFrag.getRecyclerView().scrollToPosition(DataBase.getGirlsData().size()-1);
+                        }
+                        finish();
+                    }else {
+                        Toast toast = Toast.makeText(getApplicationContext(),"Please enter roll no",Toast.LENGTH_LONG);
+                        toast.setGravity(Gravity.TOP,0,0);
+                        toast.show();
                     }
-                    if(BoysFrag.getAdapter()!=null) {
-                        BoysFrag.getAdapter().notifyDataSetChanged();
-                        BoysFrag.getRecyclerView().scrollToPosition(0);
-                    }
-                    if(GirlsFrag.getAdapter()!=null) {
-                        GirlsFrag.getAdapter().notifyDataSetChanged();
-                        GirlsFrag.getRecyclerView().scrollToPosition(0);
-                    }
-                    finish();
                 }else if(forUpdate.getFlags()==1){
 
                         // code here for update
@@ -170,9 +181,10 @@ public class SecondAcitivity extends AppCompatActivity {
                     }else{
                         amount = "XXXX";
                     }
-
                     roll = rollEdt.getText().toString();
-                    DataBase.getAllData().set(index,new DataModel(name,roll,mobile,aadhar,amount,paymentMode,gender));
+
+                    dataBase.updateRecord(name,roll,mobile,aadhar,amount,paymentMode,gender);
+                    DataBase.getAllData().addAll(dataBase.fetchData());
                     if(ListFrag.getAdapter()!=null)
                     ListFrag.getAdapter().notifyItemChanged(index);
                     if(BoysFrag .getAdapter()!=null)
